@@ -7,17 +7,14 @@ connection = connector.connect(
     password= "1234",
     database = "Intelligence_db"
                 )
-
-def create_database(self):
+def create_database():
         cursor = connection.cursor(dictionary=True)
-        connection.cursor(dictionary=True)
         cursor.execute("""create database 
                     if not exists Intelligence_db
                     """)
         
-    
-cursor = connection.cursor(dictionary=True)
-    
+        cursor.execute("use Intelligence_db")
+
 def create_tables():
 
     try:
@@ -31,15 +28,7 @@ def create_tables():
                     failed_missions int DEFAULT 0,
                     agent_rank  ENUM("Junior","Senior" ,"Commander") DEFAULT "Junior"
                 );""")
-        connection.commit()
-        return cursor.fetchall()
-
-    except Exception as e:
-            print(e)
-
-    finally:
-        connection.close()    
-    try:
+     
         cursor.execute("""create table if not exists  missions(
                 id int AUTO_INCREMENT PRIMARY key,
                 title VARCHAR(100),
@@ -53,11 +42,17 @@ def create_tables():
                 );""")
             
         connection.commit()
-        return cursor.fetchall()
 
     except Exception as e:
         print(e)
 
-    finally:
-        connection.close()
+   
     
+        
+def get_connection():
+    if connection.is_connected:
+         connection.close()
+
+create_database()
+create_tables()
+get_connection()

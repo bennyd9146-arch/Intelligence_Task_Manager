@@ -1,6 +1,12 @@
-from db_connction import connection
-class AgentDB:
-    def create_agent(body:dict):
+from .db_connction import connection
+connection.connect(
+    host= "127.0.0.1",
+    user = "root",
+    port=3306,
+    password= "1234",
+    database = "Intelligence_db"
+                )
+def create_agent(body:dict):
         try:
             
             cursor = connection.cursor(dictionary=True)
@@ -13,25 +19,22 @@ class AgentDB:
 
         except Exception as e:
             print(e)
-
         finally:
             cursor.close()
     
-    def agents_all_get():
+def all_get_agents():
         try:
             cursor = connection.cursor(dictionary=True)
             cursor.execute("select * from Intelligence_db;")
             return cursor.fetchall()
-        
+            
         except Exception as e:
             print(e)
 
 
-        finally:
-            cursor.close()
-
     
-    def get_agent_by_id(id):
+    
+def get_agent_by_id(id):
         try:
             cursor = connection.cursor(dictionary=True)
             cursor.execute("select * from agents where id = %s;")
@@ -39,13 +42,12 @@ class AgentDB:
         except Exception as e:
             print(e)
 
-        finally:
-            cursor.close()
-
-    def updete_agent(id):
+        cursor.close()
+        
+def updete_agent(body,id):
         try:
             cursor = connection.cursor(dictionary=True)
-            cursor.execute("update ")
+            cursor.execute("update agents set name = %s where id = %s")
             return cursor.fetchall()
             
         except Exception as e:
@@ -53,3 +55,14 @@ class AgentDB:
 
         finally:
             cursor.close()
+
+def agent_deactivate(id):
+    try:
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("")
+        return cursor.fetchall()
+    except Exception as e:
+         print(e)
+        
+    finally:
+         cursor.close()

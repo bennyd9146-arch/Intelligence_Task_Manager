@@ -131,3 +131,96 @@ intelligence-task-manager/
  -e MYSQL_DATABASE=Intelligence_db -p 3306:3306 mysql:8.0
 `
 
+
+
+## חלק 2
+
+זה המבנה של היום ואתמול יחד
+
+├── main.py 
+├── database
+├── routes/
+│   ├── agent\_routes.py
+│   ├── mission\_routes.py
+│   └── report\_routes.py
+├── logs/
+│   └── app.log
+├── README.md 
+└── requirements.txt
+
+
+
+## main.py
+
+
+הוא מריץ את הקבצים הוא מפעיל את השרת מחבר את הראוטים 
+
+
+## agent_routes.py
+
+הוא אחראי על כל העיסוק בפועל עם הסוכן(ליצורתלהפעיל וכו')
+
+
+| Method | Endpoint | Description |
+|:---- | :---- | :---- |
+| `post` | /agents | יצירת סוכן חדש |
+| `get` | /agents | כל הסוכנים |
+| `get` | /agents/{id} | סוכן לפי id |
+| `put` | /agents/{id} | עדכון סוכן |
+| `put` | /agents{id}/deactivate | השבתת סוכן |
+| `get` | /agents{id}/performance | ביצועי סוכן |
+
+
+
+
+## mission_routes.py
+
+| Method | Endpoint | Description |
+|:---- | :---- | :---- |
+| `post` | /missions | יצירת משימה | 
+| `get` | /missions | כל המשימות |
+| `get` | /missions{id} |משימה לפי id |
+| `put` | /missions{id}/assign/{agent_id} | שיוך לסוכן |
+| `put` | /missions/{id}/start | התחלת משימה |
+| `put` | /missions/{id}/complete | סיום בהצלחה |
+| `put` | /missions/{id}/fail | סיום בכישלון | 
+| `put` | /missions/{id}/cancel | ביטול משימה |
+
+
+
+
+
+## report_routes.py
+
+| Method | Endpoint | Description |
+|:---- | :---- | :---- |
+| `get` | /summary/reports | דוח כללי של המערכת | 
+| `get` | /reports/missions-by-status | משימות לפי סטטוס |
+| `get` | /reports/top-agent  | הסוכן המצטיין |
+
+
+## בדיקות 
+
+| בדיקה | שגיאה עם נכשל |
+| :---- | :---- |
+| המשימה קיימת | mission not found 404 |
+| הסוכן קיים | Agent not found 404 |
+| המשימה בסטטוס new | Mission not available 400 |
+| הסוכן פעיל | Agent is not active 400 |
+| פחות מ3 משמות פתוחות | Agent has reached maximum missions 400 |
+| Commander הסוכן — CRITICAL אם | Only Commander can handle critical missons 400
+
+## logging 
+
+
+| מתי | רמה  |
+| :---- | :---- |
+| בתחילת הפעולה | INFO אומר איזה קובץ נקרא
+| לפני פעולת sql | INFO אומר מה הולך לקרות בקובץ |
+| אם קרתה שגיאה | ERROR ומה בדיוק קרה |
+| אם הצליח | INFO שהצליח |
+
+
+### פעולות הרצה
+
+להתקין fastapi and uvicorn ומריצים uvicorn ex:app --reload (מה שכתוב זה בעצם שמריצים את הקובץ ואת הapp שלו וה reload זה לנוחות שלא נצטרך להריץ שוב ושוב)
